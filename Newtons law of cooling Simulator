@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <math.h>
+
+// Newton's Law of Cooling function
+double temperature(double Ta, double T0, double k, double t) {
+    return Ta + (T0 - Ta) * exp(-k * t);
+}
+
+int main() {
+    double Ta, T0, k;
+    int time, i;
+
+    printf("=====================================\n");
+    printf(" Newton's Law of Cooling Simulator\n");
+    printf("=====================================\n");
+
+    // Input values
+    printf("Enter ambient temperature (Ta): ");
+    scanf("%lf", &Ta);
+
+    printf("Enter initial temperature (T0): ");
+    scanf("%lf", &T0);
+
+    printf("Enter cooling constant (k): ");
+    scanf("%lf", &k);
+
+    printf("Enter total time steps: ");
+    scanf("%d", &time);
+
+    // Open file safely
+    FILE *fp = fopen("cooling_data.csv", "w");
+
+    if (fp == NULL) {
+        printf("\n⚠ Warning: File could not be created.\n");
+        printf("Data will only be displayed on screen.\n\n");
+    } else {
+        fprintf(fp, "Time,Temperature\n");
+    }
+
+    printf("\nTime\tTemperature\n");
+    printf("----------------------\n");
+
+    // Simulation loop
+    for (i = 0; i <= time; i++) {
+        double temp = temperature(Ta, T0, k, i);
+
+        printf("%d\t%.2lf\n", i, temp);
+
+        if (fp != NULL) {
+            fprintf(fp, "%d,%.2lf\n", i, temp);
+        }
+    }
+
+    if (fp != NULL) {
+        fclose(fp);
+        printf("\n✅ Data saved to cooling_data.csv\n");
+    }
+
+    printf("✅ Simulation completed successfully!\n");
+
+    return 0;
+}
